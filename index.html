@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MinariTriester</title>
+<meta name="description" content="Programme, Spiele, Videos und Grafiken von MinariTriester">
+<style>
+  @property --winkel { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+
+  :root {
+    --a: #E01010;                                         /* Akzentfarbe */
+    --a-hell: color-mix(in srgb, var(--a) 60%, white);
+    --a-dunkel: color-mix(in srgb, var(--a) 35%, black);
+    --a-glow: color-mix(in srgb, var(--a) 55%, transparent);
+    --a-hauch: color-mix(in srgb, var(--a) 14%, transparent);
+    --grund: #0A0A0A;
+    --box: #121212;
+    --grau: #8A8A8A;
+    --weiss: #F2F2F2;
+  }
+
+  * { box-sizing: border-box; }
+  html { background: #000; }
+  body {
+    margin: 0; padding: 24px 16px 40px;
+    background: #000; color: var(--weiss);
+    font-family: "Segoe UI", system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  a { color: var(--a-hell); }
+
+  /* ---------- Fenster ---------- */
+  .fenster {
+    position: relative; max-width: 1060px; margin: 0 auto;
+    border-radius: 12px; padding: 2px;
+    background: conic-gradient(from var(--winkel),
+      var(--a) 0deg, var(--a) 250deg, var(--a-hell) 300deg, #fff 320deg, var(--a-hell) 340deg, var(--a) 360deg);
+    animation: drehen 6s linear infinite;
+  }
+  @keyframes drehen { to { --winkel: 360deg; } }
+  .innen {
+    border-radius: 10px; overflow: hidden;
+    background:
+      radial-gradient(ellipse 60% 50% at 100% 100%, var(--a-hauch), transparent 70%),
+      var(--grund);
+  }
+  .titelleiste {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 18px; color: var(--grau);
+    font-size: 12px; letter-spacing: .45em; text-transform: uppercase;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  .titelleiste .zeichen { color: var(--a); letter-spacing: 0; font-size: 14px; }
+
+  /* ---------- Kopf ---------- */
+  header { text-align: center; padding: 34px 20px 8px; }
+  h1 { margin: 0; font-size: clamp(30px, 6vw, 46px); font-weight: 200; letter-spacing: .04em; }
+  .info { color: var(--grau); margin: 8px 0 18px; font-size: 15px; }
+  .linie {
+    height: 2px; max-width: 560px; margin: 0 auto;
+    background: linear-gradient(90deg, transparent, var(--a), transparent);
+  }
+
+  /* ---------- Silberne ▰-Knöpfe ---------- */
+  .reiter { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 16px; padding: 26px 16px 6px; }
+  .knopf {
+    position: relative; display: inline-block; padding: 9px 24px;
+    font-weight: 800; font-style: italic; font-size: 13px; letter-spacing: .06em;
+    text-transform: uppercase; text-decoration: none; cursor: pointer;
+    color: #3C3E44; border: 0; background: none; font-family: inherit;
+    text-shadow: 0 1.3px 0 rgba(255,255,255,.78), 0 -0.9px 0 rgba(0,0,0,.44);
+    isolation: isolate;
+  }
+  .knopf::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    transform: skewX(-22deg); border-radius: 3px;
+    background: linear-gradient(180deg, #fff 0%, #d9d9d9 35%, #9a9a9a 70%, #cfcfcf 100%);
+    border: 1px solid #6a6a6a;
+    transition: box-shadow .15s, border-color .15s, filter .15s;
+  }
+  .knopf:hover::before, .knopf:focus-visible::before, .knopf.aktiv::before {
+    border-color: var(--a); box-shadow: 0 0 10px var(--a-glow), 0 0 0 1px var(--a);
+  }
+  .knopf:focus-visible { outline: none; }
+  .knopf.inaktiv::before { filter: brightness(.82); }
+  .knopf[aria-disabled="true"] { cursor: default; opacity: .55; }
+  .knopf[aria-disabled="true"]:hover::before { border-color: #6a6a6a; box-shadow: none; }
+
+  /* ---------- Boxen ---------- */
+  main {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+    padding: 24px 24px 8px;
+  }
+  .spalte { display: flex; flex-direction: column; gap: 18px; }
+  .spalte > .box:last-child { flex: 1; }
+  .box {
+    background: var(--box); border-radius: 8px; padding: 18px 20px 20px;
+    border: 1px solid color-mix(in srgb, var(--a) 40%, #222);
+    box-shadow: 0 0 14px var(--a-hauch);
+    scroll-margin-top: 20px;
+  }
+  .box.wichtig { border: 2px solid var(--a); }
+  .box h2 {
+    display: flex; align-items: center; gap: 10px; margin: 0 0 14px;
+    font-size: 15px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .box h2 .zeichen { color: var(--a); }
+  .box h2::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--a), transparent); }
+  .box h3 { color: var(--a-hell); font-size: 14px; margin: 16px 0 6px; font-weight: 600; }
+  .box h3:first-of-type { margin-top: 0; }
+  .box p { margin: 0 0 10px; color: #cfcfcf; line-height: 1.55; font-size: 14.5px; }
+
+  .zeile {
+    display: flex; justify-content: space-between; gap: 12px;
+    padding: 5px 0; border-bottom: 1px solid #1d1d1d; font-size: 14px;
+  }
+  .zeile:last-of-type { border-bottom: 0; }
+  .zeile span:first-child { color: var(--grau); }
+  .zeile span:last-child { color: var(--weiss); text-align: right; }
+
+  .balken { height: 8px; border-radius: 4px; background: #1e1e1e; overflow: hidden; margin: 8px 0 4px; }
+  .balken > div { height: 100%; background: linear-gradient(90deg, var(--a-dunkel), var(--a-hell)); }
+
+  .knopfreihe { display: flex; flex-wrap: wrap; gap: 12px 16px; margin-top: 14px; padding-left: 6px; }
+
+  .galerie { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .kachel {
+    aspect-ratio: 1; border-radius: 6px; border: 1px dashed #333;
+    display: grid; place-items: center; color: #555; font-size: 22px;
+    background: linear-gradient(135deg, #161616, #0f0f0f);
+  }
+  .video {
+    aspect-ratio: 16 / 9; border-radius: 6px; border: 1px dashed #333; margin-bottom: 10px;
+    display: grid; place-items: center; color: #666; font-size: 13px; text-align: center; padding: 10px;
+    background: linear-gradient(135deg, #161616, #0f0f0f);
+  }
+  .hinweis { color: var(--grau); font-size: 13px; font-style: italic; }
+
+  /* ---------- Fuß mit Farbwahl ---------- */
+  footer { padding: 18px 20px 24px; text-align: center; }
+  .farbwahl { display: flex; justify-content: center; gap: 10px; margin: 0 0 16px; flex-wrap: wrap; }
+  .farbe {
+    width: 26px; height: 14px; border: 0; padding: 0; cursor: pointer; background: none; position: relative;
+  }
+  .farbe::before {
+    content: ""; position: absolute; inset: 0; transform: skewX(-22deg); border-radius: 2px;
+    background: var(--f); border: 2px solid #b9b9b9;
+  }
+  .farbe.gewaehlt::before { border-color: #fff; box-shadow: 0 0 8px #fff; }
+  .farbe:focus-visible { outline: none; }
+  .farbe:focus-visible::before { border-color: #fff; }
+  .fuss { color: #5c5c5c; font-size: 12.5px; }
+
+  @media (max-width: 760px) {
+    body { padding: 12px 10px 24px; }
+    main { grid-template-columns: 1fr; padding: 16px 14px 4px; }
+    .titelleiste { letter-spacing: .3em; }
+  }
+  @media (prefers-reduced-motion: reduce) { .fenster { animation: none; } }
+</style>
+</head>
+<body>
+<div class="fenster">
+  <div class="innen">
+
+    <div class="titelleiste"><span class="zeichen">▰</span>M I N A R I &nbsp; T R I E S T E R</div>
+
+    <header>
+      <h1>MinariTriester</h1>
+      <p class="info">Programme · RPG-Maker-Spiel · Videos · Grafiken</p>
+      <div class="linie"></div>
+    </header>
+
+    <nav class="reiter" aria-label="Bereiche">
+      <a class="knopf" href="#programme">Programme</a>
+      <a class="knopf" href="#spiel">Spiel</a>
+      <a class="knopf" href="#videos">Videos</a>
+      <a class="knopf" href="#grafiken">Grafiken</a>
+    </nav>
+
+    <main>
+      <div class="spalte">
+        <section class="box wichtig" id="programme">
+          <h2><span class="zeichen">▰</span>Programme</h2>
+          <p>Kleine Windows-Werkzeuge, die ich für mich selbst gebaut habe – alle im gleichen dunklen Design.</p>
+
+          <h3>System Status</h3>
+          <p>Zeigt auf einen Blick, was im PC steckt und wie es ihm geht: Prozessor, Arbeitsspeicher, Laufwerke und mehr.</p>
+          <div class="zeile"><span>Für</span><span>Windows</span></div>
+          <div class="zeile"><span>Stand</span><span>fertig</span></div>
+
+          <h3>Serien Renaming Tool (SRT)</h3>
+          <p>Benennt Anime- und Serienfolgen einheitlich um und verschiebt sie automatisch in den passenden Ordner. Beim Kopieren auf ein anderes Laufwerk wird jede Datei geprüft, damit nichts verloren geht.</p>
+          <div class="zeile"><span>Für</span><span>Windows</span></div>
+          <div class="zeile"><span>Stand</span><span>fertig</span></div>
+
+          <div class="knopfreihe">
+            <span class="knopf" aria-disabled="true">Download folgt</span>
+          </div>
+        </section>
+
+        <section class="box" id="spiel">
+          <h2><span class="zeichen">▰</span>RPG-Maker-Spiel</h2>
+          <p>Mein eigenes Rollenspiel, gebaut mit dem RPG Maker. Es geht langsam voran – hier halte ich jeden Fortschritt fest.</p>
+          <div class="zeile"><span>Titel</span><span>noch geheim</span></div>
+          <div class="zeile"><span>Stand</span><span>in Arbeit</span></div>
+          <div class="balken" aria-hidden="true"><div style="width:15%"></div></div>
+          <h3>Entwicklungstagebuch</h3>
+          <p class="hinweis">Der erste Eintrag folgt bald.</p>
+        </section>
+      </div>
+
+      <div class="spalte">
+        <section class="box" id="videos">
+          <h2><span class="zeichen">▰</span>Videos</h2>
+          <h3>AMVs (Anime-Musik-Videos)</h3>
+          <div class="video">▶<br>Hier erscheint bald ein Video</div>
+          <h3>Let's Plays</h3>
+          <div class="video">▶<br>Hier erscheint bald ein Video</div>
+        </section>
+
+        <section class="box" id="grafiken">
+          <h2><span class="zeichen">▰</span>Grafiken</h2>
+          <p>Bilder und Grafiken, die ich mit Photoshop gestaltet habe.</p>
+          <div class="galerie">
+            <div class="kachel">▰</div><div class="kachel">▰</div><div class="kachel">▰</div>
+            <div class="kachel">▰</div><div class="kachel">▰</div><div class="kachel">▰</div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="farbwahl" role="group" aria-label="Akzentfarbe wählen"></div>
+      <div class="fuss">© 2026 MinariTriester</div>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+  const farben = [
+    ['Rot', '#E01010'], ['Orange', '#FF7A00'], ['Gold', '#E0B000'], ['Grün', '#1EC03C'],
+    ['Türkis', '#00B4C8'], ['Blau', '#1E6BFF'], ['Lila', '#9B30FF'], ['Pink', '#FF2E9A']
+  ];
+  const leiste = document.querySelector('.farbwahl');
+  let gespeichert = null;
+  try { gespeichert = localStorage.getItem('akzentfarbe'); } catch (e) {}
+
+  function setzeFarbe(wert) {
+    document.documentElement.style.setProperty('--a', wert);
+    leiste.querySelectorAll('.farbe').forEach(k => k.classList.toggle('gewaehlt', k.dataset.wert === wert));
+    try { localStorage.setItem('akzentfarbe', wert); } catch (e) {}
+  }
+
+  farben.forEach(([name, wert]) => {
+    const k = document.createElement('button');
+    k.className = 'farbe'; k.title = name; k.setAttribute('aria-label', name);
+    k.dataset.wert = wert; k.style.setProperty('--f', wert);
+    k.addEventListener('click', () => setzeFarbe(wert));
+    leiste.appendChild(k);
+  });
+  setzeFarbe(farben.some(f => f[1] === gespeichert) ? gespeichert : '#E01010');
+</script>
+</body>
+</html>
